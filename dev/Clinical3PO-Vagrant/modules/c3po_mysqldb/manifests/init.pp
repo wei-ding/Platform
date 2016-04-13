@@ -16,6 +16,7 @@
 class c3po_mysqldb {
   require mysql_client
   require hive_db
+  require c3po_codebase
 
   $path="/bin:/usr/bin"
 
