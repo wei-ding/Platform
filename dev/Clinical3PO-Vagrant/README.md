@@ -1,6 +1,6 @@
 Notes
 -----
-HDP 2.3.4, OpenJDK 1.8, nginx, CentOS 64-bit VM, 400G disk, EPEL repo, Puppet 3, no SELinux, no firewall,
+HDP 2.3.4, OpenJDK 1.8, nginx, CentOS 6.7 64-bit VM, 400G disk, EPEL repo, Puppet 3, Tomcat, no SELinux, no firewall,
 
 
 Usage
@@ -9,81 +9,85 @@ Usage
 Installing VirtualBOX
 -----------------
 
-Centos:
+- Centos:
 
-cd /etc/yum.repos.d
-sudo wget http://download.virtualbox.org/virtualbox/rpm/rhel/virtualbox.repo
+  ```
+  cd /etc/yum.repos.d
+  sudo wget http://download.virtualbox.org/virtualbox/rpm/rhel/virtualbox.repo
+  ```
 
+  Install dkms
+  ```
+  sudo yum --enablerepo rpmforge install dkms
+  ```
+  or:
+  ```
+  sudo yum --enablerepo epel install dkms 
+  ```
 
+  ```
+  sudo yum groupinstall "Development Tools"
+  sudo yum install kernel-devel
+  sudo yum install VirtualBox-5.0
+  sudo usermod -a -G vboxusers username
+  ```
 
-sudo yum --enablerepo rpmforge install dkms
-or:
-sudo yum --enablerepo epel install dkms 
+- Windows:
 
-sudo yum groupinstall "Development Tools"
-sudo yum install kernel-devel
-
-sudo yum install VirtualBox-5.0
-
-sudo usermod -a -G vboxusers username
-
-
-Windows:
-
-Download VirtualBox 5.0.14: 
-http://download.virtualbox.org/virtualbox/5.0.14/VirtualBox-5.0.14-105127-Win.exe
-After VirtualBox installation finishes you will have to restart your computer. 
-
-
-Install VBox on Windows. Using Windows VirtualBox Extension pack:
-
-Download this:
-http://download.virtualbox.org/virtualbox/5.0.14/Oracle_VM_VirtualBox_Extension_Pack-5.0.14.vbox-extpack
-
-From VirtualBox main window, go to File->Preferences. This will open VirtualBox Preferences window. 
-Navigate to Extension, Next, click on the small down arrow on the right side of the window. 
-Navigate and select the Extension Pack you downloaded in the previous step. You will be asked to confirm VirtualBox Extension Pack setup.
-Click “Install” to complete VirtualBox Extension Pack installation. You will have to reboot your host effect for the changes to take effect. 
+  Download VirtualBox 5.0.14: 
+  [VirtualBox Download](http://download.virtualbox.org/virtualbox/5.0.14/VirtualBox-5.0.14-105127-Win.exe)
+  After VirtualBox installation finishes you will have to restart your computer. 
 
 
-Mac:
+  Install VBox on Windows. Using Windows VirtualBox Extension pack:
+  
+  Download this:
+  [VirtualBox Extension Pack Download](http://download.virtualbox.org/virtualbox/5.0.14/Oracle_VM_VirtualBox_Extension_Pack-5.0.14.vbox-extpack)
+  
+  From VirtualBox main window, go to File->Preferences. This will open VirtualBox Preferences window. 
+  Navigate to Extension, Next, click on the small down arrow on the right side of the window. 
+  Navigate and select the Extension Pack you downloaded in the previous step. You will be asked to confirm VirtualBox Extension Pack setup.
+  Click “Install” to complete VirtualBox Extension Pack installation. You will have to reboot your host effect for the changes to take effect. 
 
-http://download.virtualbox.org/virtualbox/5.0.14/VirtualBox-5.0.14-105127-OSX.dmg
 
-Download this:
-http://download.virtualbox.org/virtualbox/5.0.14/Oracle_VM_VirtualBox_Extension_Pack-5.0.14.vbox-extpack
+- Mac:
 
-From VirtualBox main window, go to File->Preferences. This will open VirtualBox Preferences window. 
-Navigate to Extension, Next, click on the small down arrow on the right side of the window. 
-Navigate and select the Extension Pack you downloaded in the previous step. You will be asked to confirm VirtualBox Extension Pack setup.
-Click “Install” to complete VirtualBox Extension Pack installation. You will have to reboot your host effect for the changes to take effect. 
+  http://download.virtualbox.org/virtualbox/5.0.14/VirtualBox-5.0.14-105127-OSX.dmg
+  
+  Download this:
+  http://download.virtualbox.org/virtualbox/5.0.14/Oracle_VM_VirtualBox_Extension_Pack-5.0.14.vbox-extpack
+
+  From VirtualBox main window, go to File->Preferences. This will open VirtualBox Preferences window. 
+  Navigate to Extension, Next, click on the small down arrow on the right side of the window. 
+  Navigate and select the Extension Pack you downloaded in the previous step. You will be asked to confirm VirtualBox Extension Pack setup.
+  Click “Install” to complete VirtualBox Extension Pack installation. You will have to reboot your host effect for the changes to take effect. 
 
 
 Installing Vagrant
 -----------------
 
-Centos:
-cd ~/usr/local/src
-wget https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1_x86_64.rpm
-sudo rpm -i vagrant_1.8.1_x86_64.rpm 
+- Centos:
+  ```
+  cd ~/usr/local/src
+  wget https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1_x86_64.rpm
+  sudo rpm -i vagrant_1.8.1_x86_64.rpm 
+  ``` 
 
-## Install Vagrant plugins: 
-gem install ffi
-##Vagrant Hosts:
-vagrant plugin install vagrant-hosts 
-##Vagrant Cachier (for Repo caching):
-vagrant plugin install vagrant-cachier
-
-Windows:
-
-
-https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1.msi
+  ## Install Vagrant plugins: 
+  ```
+  gem install ffi
+  ```
+  
+- Windows:
 
 
+  https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1.msi
 
-Mac:
 
-https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1.dmg
+
+- Mac:
+
+  https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1.dmg
 
 
 Prepare Clinical3PO Cluster Planning file
@@ -95,6 +99,7 @@ Example for 3 nodes
 
 under hdp_cluster_palnning:
 
+```
 3nodes-noambari.setup
 
 {
@@ -108,10 +113,11 @@ under hdp_cluster_palnning:
   "nodes": [
     { "hostname": "clinical3po-nn", "ip": "240.0.0.11",
       "roles": [ "kdc", "hive-db", "hive-meta", "nn", "yarn", "zk" ] },
-    { "hostname": "clinical3po-slave1", "ip": "240.0.0.12", "roles": [ "oozie", "slave" ] },
-    { "hostname": "clinical3po-gw", "ip": "240.0.0.10", "roles": [ "client", "tomcat", "nginx", "c3po", "maven" ] }
+    { "hostname": "clinical3po-dn", "ip": "240.0.0.12", "roles": [ "oozie", "slave", "zk" ] },
+    { "hostname": "clinical3po-gw", "ip": "240.0.0.10", "roles": [  "nginx", "tomcat", "maven", "client", "c3po" ] }
   ]
 }
+```
 
 Example for 5 nodes
 
@@ -119,6 +125,7 @@ Example for 5 nodes
 
 under hdp_cluster_palnning:
 
+```
 5nodes-noambari.setup
 
 {
@@ -132,13 +139,12 @@ under hdp_cluster_palnning:
   "nodes": [
     { "hostname": "clinical3po-nn", "ip": "240.0.0.11",
       "roles": [ "kdc", "hive-db", "hive-meta", "nn", "yarn", "zk" ] },
-    { "hostname": "clinical3po-slave1", "ip": "240.0.0.12", "roles": [ "oozie", "slave" ] },
-    { "hostname": "clinical3po-slave2", "ip": "240.0.0.13", "roles": [ "slave" ] },
-    { "hostname": "clinical3po-slave3", "ip": "240.0.0.14", "roles": [ "slave" ] },
-    { "hostname": "clinical3po-gw", "ip": "240.0.0.10", "roles": [ "client","tomcat", "maven", "nginx", "c3po" ] }
+    { "hostname": "clinical3po-dn1", "ip": "240.0.0.12", "roles": [ "oozie", "slave", "zk" ] },
+    { "hostname": "clinical3po-dn2", "ip": "240.0.0.13", "roles": [ "slave", "zk" ] },
+    { "hostname": "clinical3po-dn3", "ip": "240.0.0.14", "roles": [ "slave", "zk" ] },
+    { "hostname": "clinical3po-gw", "ip": "240.0.0.10", "roles": [  "nginx", "tomcat", "maven", "client", "c3po" ] }
   ]
 }
-
 
 ```
 
@@ -149,36 +155,68 @@ Start:
 vagrant up
 
 Access via ssh:
+```
 vagrant ssh clinical3po-nn
+```
+or
+```
 vagrant ssh clinical3po-gw
-vagrant ssh clinical3po-slave1
-vagrant ssh clinical3po-slave2
-vagrant ssh clinical3po-slave3
+```
 
-user: c3po
-password: %CannonStreetHospital%
+linux user: 
+    c3po
+linux password: 
+    %CannonStreetHospital%
 
+
+Stop VirtualBox Via Vagrant
+--------------
 Stop:
 stop all:
+```
 vagrant halt
+```
 or stop one:
+```
 vagrant halt clinical3po-gw
+```
 
+Delete VirtualBox Via Vagrant
+--------------
 Destroy it ( this command stops the running virutalbox machines and this command deletes all the files too:
 delete all:
+```
 vagrant destroy
+```
 or delete one:
+```
 vagrant destroy clinical3po-gw
+```
+
+Users
+--------------
+
+- Tomcat:
+  user:admin
+  password:PWc3po
+
+- mysql:
+  user:root
+  password:PWc3po
+  user:c3po
+  password:PWc3po
 
 
-tomcat:
-user:admin
-password:PWc3po
-
-mysql:
-user:root
-password:PWc3po
-user:c3po
-password:PWc3po
-
+Remote Access to Clinical3PO
+--------------
+login to your VirtalBox Host computer, start firefox and type this url:
+```
+127.0.0.1:8888
+```
+or 
+use other computer, start firefox, type this url:
+```
+xxx:8888
+```
+"xxx" should be your VirtalBox host computer name or ip address.
 
