@@ -19,9 +19,18 @@
                              }[0][:hostname] + "." + @domain;
 -%>
 #!/bin/bash
-mysql -u root -p -h <%= @db %> << EOF
+# Change the root password
+mysqladmin -u root password PWc3po
+mysql -u root --password="PWc3po" -h localhost << EOF
 UPDATE mysql.user SET Password = PASSWORD('PWc3po') WHERE User = 'root';
-DROP USER ''@'localhost';
-DROP DATABASE test;
+DELETE FROM mysql.user WHERE user = '';
+GRANT ALL PRIVILEGES on *.* to 'root'@'%' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES on *.* to 'root'@'localhost' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES on *.* to 'root'@'<%= @db %>' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+# Add c3po user
+GRANT ALL on *.* to 'c3po'@'localhost' IDENTIFIED BY 'PWc3po';
+GRANT ALL on *.* to 'c3po'@'%' IDENTIFIED BY 'PWc3po';
+GRANT ALL on *.* to 'c3po'@'<%= @db %>' IDENTIFIED BY 'PWc3po';
 FLUSH PRIVILEGES;
 EOF
