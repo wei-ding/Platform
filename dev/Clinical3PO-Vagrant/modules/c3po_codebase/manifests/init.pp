@@ -38,6 +38,6 @@ class c3po_codebase {
   ->
   exec { "chmodc3postage":
     path => $path,
-    command => "sudo chmod ug+rw /home/c3po/codebase/Clinical3PO-Platform",
+    command => "chmod ug+rw /home/c3po/codebase/Clinical3PO-Platform",
   }
 }
